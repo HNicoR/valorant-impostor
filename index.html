@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Valorant-Impostor</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+  }
+  h1 {
+    color: #ff4655;
+  }
+  textarea {
+    width: 300px;
+    height: 100px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    resize: none;
+  }
+  button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    background-color: #ff4655;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #ff1e35;
+  }
+  ul {
+    margin-top: 25px;
+    list-style: none;
+    padding: 0;
+    width: 320px;
+  }
+  li {
+    background-color: #2c2c44;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 18px;
+  }
+  .impostor {
+    color: #ff4655;
+    font-weight: bold;
+  }
+  .agente {
+    color: #79b8ff;
+  }
+</style>
+</head>
+<body>
+
+<h1>Valorant-Impostor</h1>
+
+<p>Ingresa los nombres de tus amigos y el tuyo separados por comas, espacios o saltos de línea.</p>
+
+<textarea id="nombresInput" placeholder="Ejemplo: Nico, Ana, Luis, María"></textarea>
+<br />
+<button onclick="asignarRoles()">Asignar roles</button>
+
+<ul id="resultado"></ul>
+
+<script>
+function asignarRoles() {
+  const input = document.getElementById('nombresInput').value.trim();
+  if (!input) {
+    alert('Por favor ingresa al menos dos nombres.');
+    return;
+  }
+
+  // Separar nombres por coma, salto de línea o espacios múltiples
+  let nombres = input.split(/[\n,]+/).map(n => n.trim()).filter(n => n !== '');
+  
+  if (nombres.length < 2) {
+    alert('Necesitas ingresar al menos dos nombres.');
+    return;
+  }
+
+  // Elegir un impostor al azar
+  const indiceImpostor = Math.floor(Math.random() * nombres.length);
+
+  const ul = document.getElementById('resultado');
+  ul.innerHTML = '';
+
+  nombres.forEach((nombre, idx) => {
+    const li = document.createElement('li');
+    if (idx === indiceImpostor) {
+      li.textContent = `${nombre} - IMPOSTOR`;
+      li.classList.add('impostor');
+    } else {
+      li.textContent = `${nombre} - Agente`;
+      li.classList.add('agente');
+    }
+    ul.appendChild(li);
+  });
+}
+</script>
+
+</body>
+</html>
