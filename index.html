@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El impostor de Valorant</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background-color: #0f1923; color: white; }
+    input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+    input { width: 200px; }
+    .link-box { margin-top: 20px; }
+    .link-box a { display: block; margin: 5px; color: #00ffff; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>El Impostor de Valorant</h1>
+  <p>Escriban todos sus nombres y hagan clic en "Jugar". Un jugador será el impostor, los demás tendrán el mismo agente.</p>
+  <div>
+    <input type="text" id="nombreInput" placeholder="Nombre del jugador">
+    <button onclick="agregarNombre()">Agregar</button>
+  </div>
+  <div id="nombresLista"></div>
+  <button onclick="generarRoles()">Jugar</button>
+  <div class="link-box" id="linksGenerados"></div>
+
+  <script>
+    const agentes = ["Jett", "Reyna", "Phoenix", "Sage", "Killjoy"];
+    const nombres = [];
+
+    function agregarNombre() {
+      const input = document.getElementById('nombreInput');
+      const nombre = input.value.trim();
+      if (nombre && !nombres.includes(nombre)) {
+        nombres.push(nombre);
+        const lista = document.getElementById('nombresLista');
+        lista.innerHTML = nombres.map(n => `👤 ${n}`).join('<br>');
+        input.value = '';
+      }
+    }
+
+    function generarRoles() {
+      if (nombres.length < 3) {
+        alert("Agrega al menos 3 jugadores.");
+        return;
+      }
+
+      const impostorIndex = Math.floor(Math.random() * nombres.length);
+      const agente = agentes[Math.floor(Math.random() * agentes.length)];
+
+      const roles = {};
+      nombres.forEach((nombre, i) => {
+        if (i === impostorIndex) {
+          roles[nombre] = "IMPOSTOR";
+        } else {
+          roles[nombre] = agente;
+        }
+      });
+
+      const container = document.getElementById("linksGenerados");
+      container.innerHTML = "<h3>Links para cada jugador:</h3>";
+      nombres.forEach(nombre => {
+        const params = new URLSearchParams({ nombre: nombre, rol: roles[nombre] });
+        const link = `${location.origin + location.pathname}?${params.toString()}`;
+        container.innerHTML += `<a href="${link}" target="_blank">Link para ${nombre}</a>`;
+      });
+    }
+
+    // Si entra con un link, mostrar rol
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const rol = params.get("rol");
+      const nombre = params.get("nombre");
+      if (rol && nombre) {
+        document.body.innerHTML = `<h1>Hola ${nombre}!</h1><h2>Tu rol es:</h2><h1 style='color: ${rol === "IMPOSTOR" ? "red" : "lightgreen"}; font-size: 4em;'>${rol}</h1>`;
+      }
+    }
+  </script>
+</body>
+</html>
